@@ -7,6 +7,7 @@ import java.nio.charset.Charset;
 
 public class OsuDbInputStream extends DataInputStream {
     private static final Charset UTF_8 = Charset.forName("UTF-8");
+    private byte[] byteBuffer = new byte[8];
 
     public OsuDbInputStream(InputStream in) {
         super(in);
@@ -37,10 +38,9 @@ public class OsuDbInputStream extends DataInputStream {
      * @throws IOException
      */
     public int readUInt16() throws IOException {
-        byte[] bytes = new byte[2];
-        readFully(bytes);
-        return (bytes[0] & 0xFF)
-                | ((bytes[1] & 0xFF) << 8);
+        readFully(byteBuffer, 0, 2);
+        return (byteBuffer[0] & 0xFF)
+                | ((byteBuffer[1] & 0xFF) << 8);
     }
 
     /**
@@ -50,12 +50,11 @@ public class OsuDbInputStream extends DataInputStream {
      * @throws IOException
      */
     public long readUInt32() throws IOException {
-        byte[] bytes = new byte[4];
-        readFully(bytes);
-        return (bytes[0] & 0xFFL)
-                | ((bytes[1] & 0xFFL) << 8)
-                | ((bytes[2] & 0xFFL) << 16)
-                | ((bytes[3] & 0xFFL) << 24);
+        readFully(byteBuffer, 0, 4);
+        return (byteBuffer[0] & 0xFFL)
+                | ((byteBuffer[1] & 0xFFL) << 8)
+                | ((byteBuffer[2] & 0xFFL) << 16)
+                | ((byteBuffer[3] & 0xFFL) << 24);
     }
 
     /**
@@ -70,16 +69,15 @@ public class OsuDbInputStream extends DataInputStream {
      * @throws IOException
      */
     public long readUInt64() throws IOException {
-        byte[] bytes = new byte[8];
-        readFully(bytes);
-        return (bytes[0] & 0xFFL)
-                | ((bytes[1] & 0xFFL) << 8)
-                | ((bytes[2] & 0xFFL) << 16)
-                | ((bytes[3] & 0xFFL) << 24)
-                | ((bytes[4] & 0xFFL) << 32)
-                | ((bytes[5] & 0xFFL) << 40)
-                | ((bytes[6] & 0xFFL) << 48)
-                | ((bytes[7] & 0xFFL) << 56); // OVERFLOW!!
+        readFully(byteBuffer, 0, 8);
+        return (byteBuffer[0] & 0xFFL)
+                | ((byteBuffer[1] & 0xFFL) << 8)
+                | ((byteBuffer[2] & 0xFFL) << 16)
+                | ((byteBuffer[3] & 0xFFL) << 24)
+                | ((byteBuffer[4] & 0xFFL) << 32)
+                | ((byteBuffer[5] & 0xFFL) << 40)
+                | ((byteBuffer[6] & 0xFFL) << 48)
+                | ((byteBuffer[7] & 0xFFL) << 56); // OVERFLOW!!
     }
 
 //    public long readULEB128asLong() throws IOException {
