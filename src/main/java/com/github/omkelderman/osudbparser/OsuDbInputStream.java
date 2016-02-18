@@ -19,8 +19,7 @@ public class OsuDbInputStream extends DataInputStream {
         }
     }
 
-    // next two methods only cause reasons :P
-
+    // next method only cause reasons :P, consistency or something, idk xd
     /**
      * Read unsigned 8 bit integer
      *
