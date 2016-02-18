@@ -1,10 +1,12 @@
 package com.github.omkelderman.osudbparser;
 
 import lombok.Getter;
+import lombok.ToString;
 
 import java.io.IOException;
 
 @Getter
+@ToString
 public class TimingPoint {
     private double bpm;
     private double offset;
