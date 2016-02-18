@@ -120,17 +120,21 @@ public class OsuBeatmapInfo {
     }
 
     private static void skipUnknownSection(OsuDbInputStream iStream) throws IOException {
-//            long amount = iStream.readUInt32();
-//            for (long i = 0; i < amount; ++i) {
-//                // the Int-Double pairs from https://osu.ppy.sh/wiki/Db_(file_format)
-//                iStream.skipFully(14);
-//            }
-//            // no idea, found 12 null-bytes... i hope this length doesn't depend on something...
-//            iStream.skipFully(12);
-        // this shit is weird.... there are usally 9 Int-Double pairs, but the 12 padding bytes are no consisten
-        // sometimes there are a few before the pairs, but it looks like the 9 is consistent, so this block is
-        // hopefully fixed length.... 4 + 9*14 + 12 =
-        iStream.skipFully(142);
+        // this is mostly complete guessing...... HALP, LETS PRAY THIS IS GUD
+        // 4 times 4byte blocks, once of them contains the number of "Int-Double pairs", but its unclear when....
+        // so keep reading till amount is not null, read the pairs, read the remainer of the 4byte blocks...
+        // yes, I know this doesn't make any sense at all, but this is what my experimenting has found out.
+        // it works on my 90gb of beatmaps
+        int count = 4;
+        long amount = 0;
+        while(amount == 0 && count > 0) {
+            amount = iStream.readUInt32();
+            --count;
+        }
+        for (long i = 0; i < amount; ++i) {
+            // the Int-Double pairs from https://osu.ppy.sh/wiki/Db_(file_format)
+            iStream.skipFully(14);
+        }
+        iStream.skipFully(4*count);
     }
-
 }
