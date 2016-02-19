@@ -29,7 +29,7 @@ public class TimingPoint {
         TimingPoint timingPoint = new TimingPoint();
         timingPoint.msPerBeat = iStream.readDouble();
         timingPoint.offset = iStream.readDouble();
-        timingPoint.inherited = iStream.readBoolean();
+        timingPoint.inherited = !iStream.readBoolean();
         return timingPoint;
     }
 }
