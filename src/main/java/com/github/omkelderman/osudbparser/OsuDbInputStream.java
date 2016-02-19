@@ -1,11 +1,12 @@
 package com.github.omkelderman.osudbparser;
 
-import java.io.DataInputStream;
+import java.io.BufferedInputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 
-public class OsuDbInputStream extends DataInputStream {
+public class OsuDbInputStream extends BufferedInputStream {
     private static final Charset UTF_8 = Charset.forName("UTF-8");
     private byte[] byteBuffer = new byte[8];
 
@@ -13,14 +14,40 @@ public class OsuDbInputStream extends DataInputStream {
         super(in);
     }
 
-    public void skipFully(int n) throws IOException {
-        int skipped = skipBytes(n);
-        if (skipped != n) {
-            throw new IOException("Could not skip " + n + " bytes, only skipped " + skipped + " bytes");
+    public void readFully(byte bytes[]) throws IOException {
+        readFully(bytes, 0, bytes.length);
+    }
+
+    public final void readFully(byte bytes[], int offset, int length) throws IOException {
+        if (length < 0) {
+            throw new IndexOutOfBoundsException();
+        }
+        int bytesRead = 0;
+        while (bytesRead < length) {
+            int localBytesRead = in.read(bytes, offset + bytesRead, length - bytesRead);
+            if (localBytesRead < 0) {
+                throw new EOFException();
+            }
+            bytesRead += localBytesRead;
         }
     }
 
-    // next method only cause reasons :P, consistency or something, idk xd
+
+    public void skipFully(long amount) throws IOException {
+        long totalSkipped = 0;
+        while (totalSkipped < amount) {
+            long localSkipped = skip(amount - totalSkipped);
+            if (localSkipped <= 0) {
+                throw new IOException("Could not skip " + amount + " bytes, only skipped " + totalSkipped + " bytes");
+            }
+            totalSkipped += localSkipped;
+        }
+    }
+
+    public boolean readBoolean() throws IOException {
+        return (readUInt8() != 0);
+    }
+
     /**
      * Read unsigned 8 bit integer
      *
@@ -28,7 +55,12 @@ public class OsuDbInputStream extends DataInputStream {
      * @throws IOException
      */
     public int readUInt8() throws IOException {
-        return readUnsignedByte();
+        int b = in.read();
+        if (b < 0) {
+            throw new EOFException();
+        }
+        return b;
+
     }
 
     /**
@@ -55,6 +87,26 @@ public class OsuDbInputStream extends DataInputStream {
                 | ((byteBuffer[1] & 0xFFL) << 8)
                 | ((byteBuffer[2] & 0xFFL) << 16)
                 | ((byteBuffer[3] & 0xFFL) << 24);
+    }
+
+    public float readFloat() throws IOException {
+        readFully(byteBuffer, 0, 4);
+        return Float.intBitsToFloat((byteBuffer[0] & 0xFF)
+                | ((byteBuffer[1] & 0xFF) << 8)
+                | ((byteBuffer[2] & 0xFF) << 16)
+                | ((byteBuffer[3] & 0xFF) << 24));
+    }
+
+    public double readDouble() throws IOException {
+        readFully(byteBuffer, 0, 8);
+        return Double.longBitsToDouble((byteBuffer[0] & 0xFFL)
+                | ((byteBuffer[1] & 0xFFL) << 8)
+                | ((byteBuffer[2] & 0xFFL) << 16)
+                | ((byteBuffer[3] & 0xFFL) << 24)
+                | ((byteBuffer[4] & 0xFFL) << 32)
+                | ((byteBuffer[5] & 0xFFL) << 40)
+                | ((byteBuffer[6] & 0xFFL) << 48)
+                | ((byteBuffer[7] & 0xFFL) << 56));
     }
 
     /**
