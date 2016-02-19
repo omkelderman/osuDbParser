@@ -1,7 +1,6 @@
 package com.github.omkelderman.osudbparser;
 
 import lombok.Getter;
-import lombok.ToString;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -10,7 +9,6 @@ import java.io.IOException;
  * Class representing the osu!.db file inside the osu installation directory
  */
 @Getter
-@ToString
 public class OsuDbFile {
     private long osuVersion;
     private long folderCount;
