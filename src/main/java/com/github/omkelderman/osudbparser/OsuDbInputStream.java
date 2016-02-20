@@ -14,11 +14,11 @@ public class OsuDbInputStream extends BufferedInputStream {
         super(in);
     }
 
-    public void readFully(byte bytes[]) throws IOException {
+    public void readFully(byte[] bytes) throws IOException {
         readFully(bytes, 0, bytes.length);
     }
 
-    public final void readFully(byte bytes[], int offset, int length) throws IOException {
+    public final void readFully(byte[] bytes, int offset, int length) throws IOException {
         if (length < 0) {
             throw new IndexOutOfBoundsException();
         }
@@ -32,6 +32,9 @@ public class OsuDbInputStream extends BufferedInputStream {
         }
     }
 
+    private void readIntoBuffer(int amount) throws IOException {
+        readFully(byteBuffer, 0, amount);
+    }
 
     public void skipFully(long amount) throws IOException {
         long totalSkipped = 0;
@@ -70,7 +73,7 @@ public class OsuDbInputStream extends BufferedInputStream {
      * @throws IOException
      */
     public int readUInt16() throws IOException {
-        readFully(byteBuffer, 0, 2);
+        readIntoBuffer(2);
         return (byteBuffer[0] & 0xFF)
                 | ((byteBuffer[1] & 0xFF) << 8);
     }
@@ -82,7 +85,7 @@ public class OsuDbInputStream extends BufferedInputStream {
      * @throws IOException
      */
     public long readUInt32() throws IOException {
-        readFully(byteBuffer, 0, 4);
+        readIntoBuffer(4);
         return (byteBuffer[0] & 0xFFL)
                 | ((byteBuffer[1] & 0xFFL) << 8)
                 | ((byteBuffer[2] & 0xFFL) << 16)
@@ -90,7 +93,7 @@ public class OsuDbInputStream extends BufferedInputStream {
     }
 
     public float readFloat() throws IOException {
-        readFully(byteBuffer, 0, 4);
+        readIntoBuffer(4);
         return Float.intBitsToFloat((byteBuffer[0] & 0xFF)
                 | ((byteBuffer[1] & 0xFF) << 8)
                 | ((byteBuffer[2] & 0xFF) << 16)
@@ -98,7 +101,7 @@ public class OsuDbInputStream extends BufferedInputStream {
     }
 
     public double readDouble() throws IOException {
-        readFully(byteBuffer, 0, 8);
+        readIntoBuffer(8);
         return Double.longBitsToDouble((byteBuffer[0] & 0xFFL)
                 | ((byteBuffer[1] & 0xFFL) << 8)
                 | ((byteBuffer[2] & 0xFFL) << 16)
@@ -121,7 +124,7 @@ public class OsuDbInputStream extends BufferedInputStream {
      * @throws IOException
      */
     public long readUInt64() throws IOException {
-        readFully(byteBuffer, 0, 8);
+        readIntoBuffer(8);
         return (byteBuffer[0] & 0xFFL)
                 | ((byteBuffer[1] & 0xFFL) << 8)
                 | ((byteBuffer[2] & 0xFFL) << 16)

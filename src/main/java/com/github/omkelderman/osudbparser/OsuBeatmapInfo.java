@@ -127,7 +127,7 @@ public class OsuBeatmapInfo {
         // it works on my 90gb of beatmaps
         int count = 4;
         long amount = 0;
-        while(amount == 0 && count > 0) {
+        while (amount == 0 && count > 0) {
             amount = iStream.readUInt32();
             --count;
         }
@@ -135,6 +135,6 @@ public class OsuBeatmapInfo {
             // the Int-Double pairs from https://osu.ppy.sh/wiki/Db_(file_format)
             iStream.skipFully(14);
         }
-        iStream.skipFully(4*count);
+        iStream.skipFully(4 * count);
     }
 }
