@@ -53,7 +53,7 @@ public class OsuBeatmapInfo {
 
     /**
      * Ranked status (4 = ranked, 5 = approved, 2 = pending/graveyard)
-     *
+     * <p>
      * <i>Someone verify this, I don't trust the wiki page I copied this info from....</i>
      */
     private int ranked;
@@ -75,9 +75,9 @@ public class OsuBeatmapInfo {
 
     /**
      * Last modification time, Windows ticks.
-     *
+     * <p>
      * <i>I suppose it's this: https://msdn.microsoft.com/library/system.datetime.ticks(v=vs.100).aspx</i>
-     *
+     * <p>
      * <b>NOTE: if this is a negative value, it's an integer overflow....</b>
      */
     private long lastModificationTime;
@@ -141,10 +141,74 @@ public class OsuBeatmapInfo {
 
     /**
      * Thread ID
-     *
+     * <p>
      * <i>I have no freakin' clue what this actually is....</i>
      */
     private long threadId;
+
+    /**
+     * Grade achieved in osu! standard
+     * <u>
+     *     <li>0: silver SS</li>
+     *     <li>1: silver S</li>
+     *     <li>2: SS</li>
+     *     <li>3: S</li>
+     *     <li>4: A</li>
+     *     <li>5: B</li>
+     *     <li>6: C</li>
+     *     <li>7: D</li>
+     *     <li>9: no grade</li>
+     * </u>
+     */
+    private int standardGrade;
+
+    /**
+     * Grade achieved in Taiko
+     * <u>
+     *     <li>0: silver SS</li>
+     *     <li>1: silver S</li>
+     *     <li>2: SS</li>
+     *     <li>3: S</li>
+     *     <li>4: A</li>
+     *     <li>5: B</li>
+     *     <li>6: C</li>
+     *     <li>7: D</li>
+     *     <li>9: no grade</li>
+     * </u>
+     */
+    private int taikoGrade;
+
+    /**
+     * Grade achieved in CTB
+     * <u>
+     *     <li>0: silver SS</li>
+     *     <li>1: silver S</li>
+     *     <li>2: SS</li>
+     *     <li>3: S</li>
+     *     <li>4: A</li>
+     *     <li>5: B</li>
+     *     <li>6: C</li>
+     *     <li>7: D</li>
+     *     <li>9: no grade</li>
+     * </u>
+     */
+    private int ctbGrade;
+
+    /**
+     * Grade achieved in osu!mania
+     * <u>
+     *     <li>0: silver SS</li>
+     *     <li>1: silver S</li>
+     *     <li>2: SS</li>
+     *     <li>3: S</li>
+     *     <li>4: A</li>
+     *     <li>5: B</li>
+     *     <li>6: C</li>
+     *     <li>7: D</li>
+     *     <li>9: no grade</li>
+     * </u>
+     */
+    private int maniaGrade;
 
     /**
      * Local beatmap offset
@@ -188,9 +252,9 @@ public class OsuBeatmapInfo {
 
     /**
      * Last time when beatmap was played
-     *
+     * <p>
      * <i>I suppose it's this again: https://msdn.microsoft.com/library/system.datetime.ticks(v=vs.100).aspx</i>
-     *
+     * <p>
      * <b>NOTE: if this is a negative value, it's an integer overflow....</b>
      */
     private long lastTimePlayed;
@@ -207,9 +271,9 @@ public class OsuBeatmapInfo {
 
     /**
      * Last time when beatmap was checked against osu! repository
-     *
+     * <p>
      * <i>I suppose it's this again: https://msdn.microsoft.com/library/system.datetime.ticks(v=vs.100).aspx</i>
-     *
+     * <p>
      * <b>NOTE: if this is a negative value, it's an integer overflow....</b>
      */
     private long lastCheckedTime;
@@ -289,8 +353,10 @@ public class OsuBeatmapInfo {
         beatmapInfo.beatmapId = iStream.readUInt32();
         beatmapInfo.beatmapSetId = iStream.readUInt32();
         beatmapInfo.threadId = iStream.readUInt32();
-        // skip 4 unknown bytes
-        iStream.skipFully(4);
+        beatmapInfo.standardGrade = iStream.readUInt8();
+        beatmapInfo.taikoGrade = iStream.readUInt8();
+        beatmapInfo.ctbGrade = iStream.readUInt8();
+        beatmapInfo.maniaGrade = iStream.readUInt8();
         beatmapInfo.localOffset = iStream.readUInt16();
         beatmapInfo.stackLeniency = iStream.readFloat();
         beatmapInfo.gameMode = iStream.readUInt8();
