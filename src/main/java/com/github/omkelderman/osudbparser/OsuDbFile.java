@@ -10,10 +10,35 @@ import java.io.IOException;
  */
 @Getter
 public class OsuDbFile {
+    /**
+     * osu! version (e.g. 20150203)
+     */
     private long osuVersion;
+
+    /**
+     * "Folder Count"
+     *
+     * <i>actually what I have observed is more count of things (folders and random files) inside the
+     * songs-directory</i>
+     */
     private long folderCount;
+
+    /**
+     * AccountUnlocked (only false when the account is locked or banned in any way)
+     */
     private boolean accountUnlocked;
+
+    // there should be a "Date the account will be unlocked" field here
+    // skipped it cause the wiki said "DateTime" as Data Type, was to lazy to figure out what that actually is
+
+    /**
+     * Player name
+     */
     private String playerName;
+
+    /**
+     * Array of beatmaps
+     */
     private OsuBeatmapInfo[] beatmaps;
 
     private OsuDbFile() {

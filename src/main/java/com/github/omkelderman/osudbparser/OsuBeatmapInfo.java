@@ -6,49 +6,244 @@ import java.io.IOException;
 
 @Getter
 public class OsuBeatmapInfo {
+    /**
+     * Artist name
+     */
     private String artistName;
+
+    /**
+     * Artist name, in Unicode
+     */
     private String artistNameUnicode;
+
+    /**
+     * Song title
+     */
     private String songTitle;
+
+    /**
+     * Song title, in Unicode
+     */
     private String songTitleUnicode;
+
+    /**
+     * Creator name
+     */
     private String creatorName;
+
+    /**
+     * Difficulty (e.g. Hard, Insane, etc.)
+     */
     private String difficulty;
+
+    /**
+     * Audio file name
+     */
     private String audioFileName;
+
+    /**
+     * MD5 hash of the beatmap
+     */
     private String md5BeatmapHash;
+
+    /**
+     * Name of the .osu file corresponding to this beatmap
+     */
     private String osuFileName;
+
+    /**
+     * Ranked status (4 = ranked, 5 = approved, 2 = pending/graveyard)
+     *
+     * <i>Someone verify this, I don't trust the wiki page I copied this info from....</i>
+     */
     private int ranked;
+
+    /**
+     * Number of hitcircles
+     */
     private int hitcircleCount;
+
+    /**
+     * Number of sliders (note: this will be present in every mode)
+     */
     private int sliderCount;
+
+    /**
+     * Number of spinners (note: this will be present in every mode)
+     */
     private int spinnerCount;
+
+    /**
+     * Last modification time, Windows ticks.
+     *
+     * <i>I suppose it's this: https://msdn.microsoft.com/library/system.datetime.ticks(v=vs.100).aspx</i>
+     *
+     * <b>NOTE: if this is a negative value, it's an integer overflow....</b>
+     */
     private long lastModificationTime;
+
+    /**
+     * Approach rate
+     */
     private float approachRate;
+
+    /**
+     * Circle size
+     */
     private float circleSize;
+
+    /**
+     * HP drain
+     */
     private float hpDrain;
+
+    /**
+     * Overall difficulty
+     */
     private float OverallDifficulty;
+
+    /**
+     * Slider velocity
+     */
     private double sliderVelocity;
+
+    // skipped the "Int-Double pairs", aparently they now have a meaning, need to look into that
+
+    /**
+     * Drain time, in seconds
+     */
     private long drainTime;
+
+    /**
+     * Total time, in milliseconds
+     */
     private long totalTime;
+
+    /**
+     * Time when the audio preview when hovering over a beatmap in beatmap select starts, in milliseconds.
+     */
     private long audioPreviewStartTime;
+
+    /**
+     * Array of timing points
+     */
     private TimingPoint[] timingPoints;
+
+    /**
+     * Beatmap ID
+     */
     private long beatmapId;
+
+    /**
+     * Beatmap set ID
+     */
     private long beatmapSetId;
+
+    /**
+     * Thread ID
+     *
+     * <i>I have no freakin' clue what this actually is....</i>
+     */
     private long threadId;
+
+    /**
+     * Local beatmap offset
+     */
     private int localOffset;
+
+    /**
+     * Stack leniency
+     */
     private float stackLeniency;
+
+    /**
+     * Osu gameplay mode. 0x00 = osu!Standard, 0x01 = Taiko, 0x02 = CTB, 0x03 = Mania
+     */
     private int gameMode;
+
+    /**
+     * Song source
+     */
     private String source;
+
+    /**
+     * Song tags
+     */
     private String tags;
+
+    /**
+     * Online offset
+     */
     private int onlineOffset;
+
+    /**
+     * Font used for the title of the song
+     */
     private String font;
+
+    /**
+     * Is beatmap unplayed
+     */
     private boolean unplayed;
+
+    /**
+     * Last time when beatmap was played
+     *
+     * <i>I suppose it's this again: https://msdn.microsoft.com/library/system.datetime.ticks(v=vs.100).aspx</i>
+     *
+     * <b>NOTE: if this is a negative value, it's an integer overflow....</b>
+     */
     private long lastTimePlayed;
+
+    /**
+     * Is the beatmap osz2
+     */
     private boolean osz2;
+
+    /**
+     * Folder name of the beatmap, relative to Songs folder
+     */
     private String folderName;
+
+    /**
+     * Last time when beatmap was checked against osu! repository
+     *
+     * <i>I suppose it's this again: https://msdn.microsoft.com/library/system.datetime.ticks(v=vs.100).aspx</i>
+     *
+     * <b>NOTE: if this is a negative value, it's an integer overflow....</b>
+     */
     private long lastCheckedTime;
+
+    /**
+     * Ignore beatmap sounds
+     */
     private boolean ignoreBeatmapSounds;
+
+    /**
+     * Ignore beatmap skin
+     */
     private boolean ignoreBeatmapSkin;
+
+    /**
+     * Disable storyboard
+     */
     private boolean disableStoryboard;
+
+    /**
+     * Disable video
+     */
     private boolean disableVideo;
+
+    /**
+     * Visual override
+     */
     private boolean visualOverride;
+
+    // skipped "Int | Last modification time (?)"
+
+    /**
+     * Mania scroll speed
+     */
     private int maniaScrollSpeed;
 
     private OsuBeatmapInfo() {
@@ -107,7 +302,7 @@ public class OsuBeatmapInfo {
         beatmapInfo.lastTimePlayed = iStream.readUInt64();
         beatmapInfo.osz2 = iStream.readBoolean();
         beatmapInfo.folderName = iStream.readString();
-        beatmapInfo.lastCheckedTime = iStream.readUInt64(); // when beatmap was checked against osu! repository
+        beatmapInfo.lastCheckedTime = iStream.readUInt64();
         beatmapInfo.ignoreBeatmapSounds = iStream.readBoolean();
         beatmapInfo.ignoreBeatmapSkin = iStream.readBoolean();
         beatmapInfo.disableStoryboard = iStream.readBoolean();
