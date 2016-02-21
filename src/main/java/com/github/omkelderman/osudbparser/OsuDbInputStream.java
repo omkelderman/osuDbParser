@@ -24,7 +24,7 @@ public class OsuDbInputStream extends BufferedInputStream {
         }
         int bytesRead = 0;
         while (bytesRead < length) {
-            int localBytesRead = in.read(bytes, offset + bytesRead, length - bytesRead);
+            int localBytesRead = read(bytes, offset + bytesRead, length - bytesRead);
             if (localBytesRead < 0) {
                 throw new EOFException();
             }
@@ -58,7 +58,7 @@ public class OsuDbInputStream extends BufferedInputStream {
      * @throws IOException
      */
     public int readUInt8() throws IOException {
-        int b = in.read();
+        int b = read();
         if (b < 0) {
             throw new EOFException();
         }
