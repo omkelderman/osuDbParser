@@ -130,6 +130,16 @@ public class OsuBeatmapInfo {
     private TimingPoint[] timingPoints;
 
     /**
+     * The highest bpm found in this map
+     */
+    private double bpmMin;
+
+    /**
+     * The lowest bpm found in this map
+     */
+    private double bpmMax;
+
+    /**
      * Beatmap ID
      */
     private long beatmapId;
@@ -350,6 +360,7 @@ public class OsuBeatmapInfo {
         }
         beatmapInfo.timingPoints = new TimingPoint[(int) timingPointCount];
         TimingPoint.parse(beatmapInfo.timingPoints, iStream);
+        beatmapInfo.calcMinMaxBpm();
         beatmapInfo.beatmapId = iStream.readUInt32();
         beatmapInfo.beatmapSetId = iStream.readUInt32();
         beatmapInfo.threadId = iStream.readUInt32();
@@ -378,6 +389,11 @@ public class OsuBeatmapInfo {
         iStream.skipFully(4);
         beatmapInfo.maniaScrollSpeed = iStream.readUInt8();
         return beatmapInfo;
+    }
+
+    private void calcMinMaxBpm() {
+        bpmMin = TimingPoint.calcBpmMin(timingPoints);
+        bpmMax = TimingPoint.calcBpmMax(timingPoints);
     }
 
     private static void skipUnknownSection(OsuDbInputStream iStream) throws IOException {
