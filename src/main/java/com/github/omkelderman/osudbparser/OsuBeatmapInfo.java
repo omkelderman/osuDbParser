@@ -107,7 +107,33 @@ public class OsuBeatmapInfo {
      */
     private double sliderVelocity;
 
-    // skipped the "Int-Double pairs", aparently they now have a meaning, need to look into that
+    /**
+     * Star rating for osu! standard
+     * <p>
+     * Can be <code>null</code> if the information is not available for this gamemode
+     */
+    private StarRating standardStarRating;
+
+    /**
+     * Star rating for taiko
+     * <p>
+     * Can be <code>null</code> if the information is not available for this gamemode
+     */
+    private StarRating taikoStarRating;
+
+    /**
+     * Star rating for ctb
+     * <p>
+     * Can be <code>null</code> if the information is not available for this gamemode
+     */
+    private StarRating ctbStarRating;
+
+    /**
+     * Star rating for mania
+     * <p>
+     * Can be <code>null</code> if the information is not available for this gamemode
+     */
+    private StarRating maniaStarRating;
 
     /**
      * Drain time, in seconds
@@ -159,15 +185,15 @@ public class OsuBeatmapInfo {
     /**
      * Grade achieved in osu! standard
      * <u>
-     *     <li>0: silver SS</li>
-     *     <li>1: silver S</li>
-     *     <li>2: SS</li>
-     *     <li>3: S</li>
-     *     <li>4: A</li>
-     *     <li>5: B</li>
-     *     <li>6: C</li>
-     *     <li>7: D</li>
-     *     <li>9: no grade</li>
+     * <li>0: silver SS</li>
+     * <li>1: silver S</li>
+     * <li>2: SS</li>
+     * <li>3: S</li>
+     * <li>4: A</li>
+     * <li>5: B</li>
+     * <li>6: C</li>
+     * <li>7: D</li>
+     * <li>9: no grade</li>
      * </u>
      */
     private int standardGrade;
@@ -175,15 +201,15 @@ public class OsuBeatmapInfo {
     /**
      * Grade achieved in Taiko
      * <u>
-     *     <li>0: silver SS</li>
-     *     <li>1: silver S</li>
-     *     <li>2: SS</li>
-     *     <li>3: S</li>
-     *     <li>4: A</li>
-     *     <li>5: B</li>
-     *     <li>6: C</li>
-     *     <li>7: D</li>
-     *     <li>9: no grade</li>
+     * <li>0: silver SS</li>
+     * <li>1: silver S</li>
+     * <li>2: SS</li>
+     * <li>3: S</li>
+     * <li>4: A</li>
+     * <li>5: B</li>
+     * <li>6: C</li>
+     * <li>7: D</li>
+     * <li>9: no grade</li>
      * </u>
      */
     private int taikoGrade;
@@ -191,15 +217,15 @@ public class OsuBeatmapInfo {
     /**
      * Grade achieved in CTB
      * <u>
-     *     <li>0: silver SS</li>
-     *     <li>1: silver S</li>
-     *     <li>2: SS</li>
-     *     <li>3: S</li>
-     *     <li>4: A</li>
-     *     <li>5: B</li>
-     *     <li>6: C</li>
-     *     <li>7: D</li>
-     *     <li>9: no grade</li>
+     * <li>0: silver SS</li>
+     * <li>1: silver S</li>
+     * <li>2: SS</li>
+     * <li>3: S</li>
+     * <li>4: A</li>
+     * <li>5: B</li>
+     * <li>6: C</li>
+     * <li>7: D</li>
+     * <li>9: no grade</li>
      * </u>
      */
     private int ctbGrade;
@@ -207,15 +233,15 @@ public class OsuBeatmapInfo {
     /**
      * Grade achieved in osu!mania
      * <u>
-     *     <li>0: silver SS</li>
-     *     <li>1: silver S</li>
-     *     <li>2: SS</li>
-     *     <li>3: S</li>
-     *     <li>4: A</li>
-     *     <li>5: B</li>
-     *     <li>6: C</li>
-     *     <li>7: D</li>
-     *     <li>9: no grade</li>
+     * <li>0: silver SS</li>
+     * <li>1: silver S</li>
+     * <li>2: SS</li>
+     * <li>3: S</li>
+     * <li>4: A</li>
+     * <li>5: B</li>
+     * <li>6: C</li>
+     * <li>7: D</li>
+     * <li>9: no grade</li>
      * </u>
      */
     private int maniaGrade;
@@ -350,7 +376,10 @@ public class OsuBeatmapInfo {
         beatmapInfo.hpDrain = iStream.readFloat();
         beatmapInfo.OverallDifficulty = iStream.readFloat();
         beatmapInfo.sliderVelocity = iStream.readDouble();
-        skipUnknownSection(iStream);
+        beatmapInfo.standardStarRating = StarRating.parse(iStream);
+        beatmapInfo.taikoStarRating = StarRating.parse(iStream);
+        beatmapInfo.ctbStarRating = StarRating.parse(iStream);
+        beatmapInfo.maniaStarRating = StarRating.parse(iStream);
         beatmapInfo.drainTime = iStream.readUInt32();
         beatmapInfo.totalTime = iStream.readUInt32();
         beatmapInfo.audioPreviewStartTime = iStream.readUInt32();
@@ -394,24 +423,5 @@ public class OsuBeatmapInfo {
     private void calcMinMaxBpm() {
         bpmMin = TimingPoint.calcBpmMin(timingPoints);
         bpmMax = TimingPoint.calcBpmMax(timingPoints);
-    }
-
-    private static void skipUnknownSection(OsuDbInputStream iStream) throws IOException {
-        // this is mostly complete guessing...... HALP, LETS PRAY THIS IS GUD
-        // 4 times 4byte blocks, once of them contains the number of "Int-Double pairs", but its unclear when....
-        // so keep reading till amount is not null, read the pairs, read the remainer of the 4byte blocks...
-        // yes, I know this doesn't make any sense at all, but this is what my experimenting has found out.
-        // it works on my 90gb of beatmaps
-        int count = 4;
-        long amount = 0;
-        while (amount == 0 && count > 0) {
-            amount = iStream.readUInt32();
-            --count;
-        }
-        for (long i = 0; i < amount; ++i) {
-            // the Int-Double pairs from https://osu.ppy.sh/wiki/Db_(file_format)
-            iStream.skipFully(14);
-        }
-        iStream.skipFully(4 * count);
     }
 }
