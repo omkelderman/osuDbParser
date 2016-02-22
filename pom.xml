@@ -6,7 +6,45 @@
 
     <groupId>com.github.omkelderman</groupId>
     <artifactId>osu-db-parser</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.3-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <name>osu-db-parser</name>
+    <description>Parse the osu!.db file inside the osu! installation direcotry.</description>
+    <url>https://github.com/omkelderman/osuDbParser</url>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://opensource.org/licenses/MIT</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Olle Kelderman</name>
+            <email>omkelderman@gmail.com</email>
+            <url>https://github.com/omkelderman</url>
+        </developer>
+    </developers>
+
+    <scm>
+        <developerConnection>scm:git:git@github.com:omkelderman/osuDbParser.git</developerConnection>
+        <connection>scm:git:git@github.com:omkelderman/osuDbParser.git</connection>
+        <url>https://github.com/omkelderman/osuDbParser</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>omk2-snapshots</id>
+            <url>http://repo.omkserver.nl/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>omk2-releases</id>
+            <url>http://repo.omkserver.nl/content/repositories/releases</url>
+        </repository>
+    </distributionManagement>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -35,5 +73,4 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
-
 </project>
