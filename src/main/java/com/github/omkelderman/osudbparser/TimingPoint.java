@@ -31,19 +31,19 @@ public class TimingPoint {
     private TimingPoint() {
     }
 
-    public static TimingPoint[] parse(OsuDbInputStream iStream) throws IOException {
+    public static TimingPoint[] parseArray(OsuDbInputStream iStream) throws IOException {
         long timingPointCount = iStream.readUInt32();
         if (timingPointCount > Integer.MAX_VALUE) {
             throw new IOException("timingPointCount to much to store the data...");
         }
         TimingPoint[] timingPoints = new TimingPoint[(int) timingPointCount];
         for (int i = 0; i < timingPointCount; ++i) {
-            timingPoints[i] = parseSingle(iStream);
+            timingPoints[i] = parse(iStream);
         }
         return timingPoints;
     }
 
-    private static TimingPoint parseSingle(OsuDbInputStream iStream) throws IOException {
+    public static TimingPoint parse(OsuDbInputStream iStream) throws IOException {
         TimingPoint timingPoint = new TimingPoint();
         timingPoint.msPerBeat = iStream.readDouble();
         timingPoint.bpm = 60000 / timingPoint.msPerBeat;

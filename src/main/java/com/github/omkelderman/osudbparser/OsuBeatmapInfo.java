@@ -357,19 +357,19 @@ public class OsuBeatmapInfo {
     private OsuBeatmapInfo() {
     }
 
-    public static OsuBeatmapInfo[] parse(OsuDbInputStream iStream) throws IOException {
+    public static OsuBeatmapInfo[] parseArray(OsuDbInputStream iStream) throws IOException {
         long beatmapCount = iStream.readUInt32();
         if (beatmapCount > Integer.MAX_VALUE) {
             throw new IOException("beatmapCount to much to store the data...");
         }
         OsuBeatmapInfo[] beatmaps = new OsuBeatmapInfo[(int) beatmapCount];
         for (int i = 0; i < beatmaps.length; ++i) {
-            beatmaps[i] = parseSingle(iStream);
+            beatmaps[i] = parse(iStream);
         }
         return beatmaps;
     }
 
-    public static OsuBeatmapInfo parseSingle(OsuDbInputStream iStream) throws IOException {
+    public static OsuBeatmapInfo parse(OsuDbInputStream iStream) throws IOException {
         OsuBeatmapInfo beatmapInfo = new OsuBeatmapInfo();
         beatmapInfo.artistName = iStream.readString();
         beatmapInfo.artistNameUnicode = iStream.readString();
@@ -397,7 +397,7 @@ public class OsuBeatmapInfo {
         beatmapInfo.drainTime = iStream.readUInt32();
         beatmapInfo.totalTime = iStream.readUInt32();
         beatmapInfo.audioPreviewStartTime = iStream.readUInt32();
-        beatmapInfo.timingPoints = TimingPoint.parse(iStream);
+        beatmapInfo.timingPoints = TimingPoint.parseArray(iStream);
         beatmapInfo.calcMinMaxBpm();
         beatmapInfo.beatmapId = iStream.readUInt32();
         beatmapInfo.beatmapSetId = iStream.readUInt32();
