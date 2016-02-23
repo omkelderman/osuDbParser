@@ -6,12 +6,17 @@
 
     <groupId>com.github.omkelderman</groupId>
     <artifactId>osu-db-parser</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>osu-db-parser</name>
     <description>Parse the osu!.db file inside the osu! installation direcotry.</description>
     <url>https://github.com/omkelderman/osuDbParser</url>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <jdk.version>1.8</jdk.version>
+    </properties>
 
     <licenses>
         <license>
@@ -32,7 +37,7 @@
         <developerConnection>scm:git:git@github.com:omkelderman/osuDbParser.git</developerConnection>
         <connection>scm:git:git@github.com:omkelderman/osuDbParser.git</connection>
         <url>https://github.com/omkelderman/osuDbParser</url>
-        <tag>v1.0.0</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <distributionManagement>
@@ -45,11 +50,6 @@
             <url>http://repo.omkserver.nl/content/repositories/releases</url>
         </repository>
     </distributionManagement>
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jdk.version>1.8</jdk.version>
-    </properties>
 
     <build>
         <plugins>
@@ -71,6 +71,19 @@
             <artifactId>lombok</artifactId>
             <version>1.14.8</version>
             <scope>provided</scope>
+        </dependency>
+
+        <!-- test dependencies -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>1.10.19</version>
         </dependency>
     </dependencies>
 </project>
