@@ -5,6 +5,7 @@ import lombok.Getter;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Class representing the osu!.db file inside the osu installation directory
@@ -57,7 +58,7 @@ public class OsuDbFile {
         }
     }
 
-    public static OsuDbFile parse(FileInputStream fileInputStream) throws IOException {
+    public static OsuDbFile parse(InputStream fileInputStream) throws IOException {
         return parse(new OsuDbInputStream(fileInputStream));
     }
 
