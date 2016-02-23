@@ -100,7 +100,7 @@ public class OsuBeatmapInfo {
     /**
      * Overall difficulty
      */
-    private float OverallDifficulty;
+    private float overallDifficulty;
 
     /**
      * Slider velocity
@@ -387,7 +387,7 @@ public class OsuBeatmapInfo {
         beatmapInfo.approachRate = iStream.readFloat();
         beatmapInfo.circleSize = iStream.readFloat();
         beatmapInfo.hpDrain = iStream.readFloat();
-        beatmapInfo.OverallDifficulty = iStream.readFloat();
+        beatmapInfo.overallDifficulty = iStream.readFloat();
         beatmapInfo.sliderVelocity = iStream.readDouble();
         beatmapInfo.standardStarRating = StarRating.parse(iStream);
         beatmapInfo.taikoStarRating = StarRating.parse(iStream);
