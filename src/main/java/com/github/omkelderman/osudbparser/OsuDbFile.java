@@ -1,5 +1,6 @@
 package com.github.omkelderman.osudbparser;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 
 import java.io.FileInputStream;
@@ -29,7 +30,9 @@ public class OsuDbFile {
     private boolean accountUnlocked;
 
     // there should be a "Date the account will be unlocked" field here
-    // skipped it cause the wiki said "DateTime" as Data Type, was to lazy to figure out what that actually is
+    // "skipped" it cause the wiki said "DateTime" as Data Type, was to lazy to figure out what that actually is
+    @Getter(AccessLevel.NONE)
+    private byte[] unknownDateTimeBytes = new byte[8];
 
     /**
      * Player name
@@ -40,6 +43,10 @@ public class OsuDbFile {
      * Array of beatmaps
      */
     private OsuBeatmapInfo[] beatmaps;
+
+    // "skipped" unknown int
+    @Getter(AccessLevel.NONE)
+    private byte[] unknownIntBytes = new byte[4];
 
     private OsuDbFile() {
     }
@@ -64,11 +71,10 @@ public class OsuDbFile {
         file.osuVersion = version;
         file.folderCount = iStream.readUInt32();
         file.accountUnlocked = iStream.readBoolean();
-        // skip "DateTime - Date the account will be unlocked"
-        iStream.skipFully(8);
+        iStream.readFully(file.unknownDateTimeBytes);
         file.playerName = iStream.readString();
         file.beatmaps = OsuBeatmapInfo.parse(iStream);
-
+        iStream.readFully(file.unknownIntBytes);
         return file;
     }
 

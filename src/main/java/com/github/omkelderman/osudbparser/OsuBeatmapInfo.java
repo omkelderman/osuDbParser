@@ -339,7 +339,14 @@ public class OsuBeatmapInfo {
      */
     private boolean visualOverride;
 
-    // skipped "Int | Last modification time (?)"
+    /**
+     * Last modification time (?)
+     * <p>
+     * <b>NOTE: That question-mark comes from the wiki, so it is probably advised to just not use this field!</b>
+     * <p>
+     * From what I have seen, it looks like this is always <code>0</code>, so its probably unused, or something else.
+     */
+    private long lastModificationTime2;
 
     /**
      * Mania scroll speed
@@ -415,8 +422,7 @@ public class OsuBeatmapInfo {
         beatmapInfo.disableStoryboard = iStream.readBoolean();
         beatmapInfo.disableVideo = iStream.readBoolean();
         beatmapInfo.visualOverride = iStream.readBoolean();
-        // skip "Last modification time (?)"
-        iStream.skipFully(4);
+        beatmapInfo.lastModificationTime2 = iStream.readUInt32();
         beatmapInfo.maniaScrollSpeed = iStream.readUInt8();
         return beatmapInfo;
     }
