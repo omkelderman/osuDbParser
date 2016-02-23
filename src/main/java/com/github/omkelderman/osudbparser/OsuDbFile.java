@@ -1,5 +1,6 @@
 package com.github.omkelderman.osudbparser;
 
+import com.github.omkelderman.osudbparser.io.OsuDbInputStream;
 import lombok.AccessLevel;
 import lombok.Getter;
 

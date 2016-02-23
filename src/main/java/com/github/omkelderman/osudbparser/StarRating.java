@@ -1,5 +1,7 @@
 package com.github.omkelderman.osudbparser;
 
+import com.github.omkelderman.osudbparser.io.OsuDbInputStream;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package com.github.omkelderman.osudbparser;
+package com.github.omkelderman.osudbparser.io;
 
 import org.junit.Test;
 
@@ -6,6 +6,7 @@ import java.io.ByteArrayInputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -19,6 +20,8 @@ public class OsuDbInputStreamTest {
 
         OsuDbInputStream osuDbInputStream = new OsuDbInputStream(inputStream);
         byte[] bytesToRead = new byte[4]; // to much
+
+        // should throw IOException
         osuDbInputStream.readFully(bytesToRead);
     }
 
@@ -113,13 +116,7 @@ public class OsuDbInputStreamTest {
     @Test
     public void testReadFloat() throws Exception {
         float f = 3.1415926535F; // PI :D
-        byte[] bytes = ByteBuffer.allocate(4).putFloat(f).array();
-        // ok java uses big endian, we little endian, lets reverse the bytes
-        for (int i = 0; i < bytes.length / 2; i++) {
-            byte temp = bytes[i];
-            bytes[i] = bytes[bytes.length - i - 1];
-            bytes[bytes.length - i - 1] = temp;
-        }
+        byte[] bytes = ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putFloat(f).array();
         ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
         OsuDbInputStream osuDbInputStream = new OsuDbInputStream(inputStream);
         float resultF = osuDbInputStream.readFloat();
@@ -130,13 +127,7 @@ public class OsuDbInputStreamTest {
     @Test
     public void testReadDouble() throws Exception {
         double d = 3.1415926535F; // PI :D
-        byte[] bytes = ByteBuffer.allocate(8).putDouble(d).array();
-        // ok java uses big endian, we little endian, lets reverse the bytes
-        for (int i = 0; i < bytes.length / 2; i++) {
-            byte temp = bytes[i];
-            bytes[i] = bytes[bytes.length - i - 1];
-            bytes[bytes.length - i - 1] = temp;
-        }
+        byte[] bytes = ByteBuffer.allocate(8).order(ByteOrder.LITTLE_ENDIAN).putDouble(d).array();
         ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
         OsuDbInputStream osuDbInputStream = new OsuDbInputStream(inputStream);
         double resultD = osuDbInputStream.readDouble();
@@ -156,7 +147,7 @@ public class OsuDbInputStreamTest {
     }
 
     @Test
-    public void testReadULEB128asIntSingleByt() throws Exception {
+    public void testReadULEB128asIntSingleByte() throws Exception {
         int expected = 0x42;
         OsuDbInputStream osuDbInputStream = new OsuDbInputStream(buildInputStream(expected));
 

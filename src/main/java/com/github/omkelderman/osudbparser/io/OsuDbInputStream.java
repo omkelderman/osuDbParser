@@ -1,4 +1,4 @@
-package com.github.omkelderman.osudbparser;
+package com.github.omkelderman.osudbparser.io;
 
 import java.io.BufferedInputStream;
 import java.io.EOFException;
@@ -92,26 +92,6 @@ public class OsuDbInputStream extends BufferedInputStream {
                 | ((byteBuffer[3] & 0xFFL) << 24);
     }
 
-    public float readFloat() throws IOException {
-        readIntoBuffer(4);
-        return Float.intBitsToFloat((byteBuffer[0] & 0xFF)
-                | ((byteBuffer[1] & 0xFF) << 8)
-                | ((byteBuffer[2] & 0xFF) << 16)
-                | ((byteBuffer[3] & 0xFF) << 24));
-    }
-
-    public double readDouble() throws IOException {
-        readIntoBuffer(8);
-        return Double.longBitsToDouble((byteBuffer[0] & 0xFFL)
-                | ((byteBuffer[1] & 0xFFL) << 8)
-                | ((byteBuffer[2] & 0xFFL) << 16)
-                | ((byteBuffer[3] & 0xFFL) << 24)
-                | ((byteBuffer[4] & 0xFFL) << 32)
-                | ((byteBuffer[5] & 0xFFL) << 40)
-                | ((byteBuffer[6] & 0xFFL) << 48)
-                | ((byteBuffer[7] & 0xFFL) << 56));
-    }
-
     /**
      * Read little endian unsigned 64 bit integer.
      * <p>
@@ -133,6 +113,26 @@ public class OsuDbInputStream extends BufferedInputStream {
                 | ((byteBuffer[5] & 0xFFL) << 40)
                 | ((byteBuffer[6] & 0xFFL) << 48)
                 | ((byteBuffer[7] & 0xFFL) << 56); // OVERFLOW!!
+    }
+
+    public float readFloat() throws IOException {
+        readIntoBuffer(4);
+        return Float.intBitsToFloat((byteBuffer[0] & 0xFF)
+                | ((byteBuffer[1] & 0xFF) << 8)
+                | ((byteBuffer[2] & 0xFF) << 16)
+                | ((byteBuffer[3] & 0xFF) << 24));
+    }
+
+    public double readDouble() throws IOException {
+        readIntoBuffer(8);
+        return Double.longBitsToDouble((byteBuffer[0] & 0xFFL)
+                | ((byteBuffer[1] & 0xFFL) << 8)
+                | ((byteBuffer[2] & 0xFFL) << 16)
+                | ((byteBuffer[3] & 0xFFL) << 24)
+                | ((byteBuffer[4] & 0xFFL) << 32)
+                | ((byteBuffer[5] & 0xFFL) << 40)
+                | ((byteBuffer[6] & 0xFFL) << 48)
+                | ((byteBuffer[7] & 0xFFL) << 56));
     }
 
 //    public long readULEB128asLong() throws IOException {
