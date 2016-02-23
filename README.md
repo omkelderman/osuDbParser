@@ -1,4 +1,4 @@
-# osuDbParser
+# osuDbParser [![Build Status](https://travis-ci.org/omkelderman/osuDbParser.svg?branch=master)](https://travis-ci.org/omkelderman/osuDbParser)
 
 A silly attempt to make a thing that can read the `osu!.db` file.
 
