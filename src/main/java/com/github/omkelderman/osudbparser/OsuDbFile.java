@@ -17,7 +17,7 @@ public class OsuDbFile {
 
     /**
      * "Folder Count"
-     *
+     * <p>
      * <i>actually what I have observed is more count of things (folders and random files) inside the
      * songs-directory</i>
      */
@@ -67,12 +67,7 @@ public class OsuDbFile {
         // skip "DateTime - Date the account will be unlocked"
         iStream.skipFully(8);
         file.playerName = iStream.readString();
-        long beatmapCount = iStream.readUInt32();
-        if (beatmapCount > Integer.MAX_VALUE) {
-            throw new IOException("beatmapCount to much to store the data...");
-        }
-        file.beatmaps = new OsuBeatmapInfo[(int) beatmapCount];
-        OsuBeatmapInfo.parse(file.beatmaps, iStream);
+        file.beatmaps = OsuBeatmapInfo.parse(iStream);
 
         return file;
     }
