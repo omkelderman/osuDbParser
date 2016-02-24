@@ -1,4 +1,5 @@
 v 1.0.1
+    - Added main / most used bpm
     - StarRating.forMods(long) now filters out mods that not affect star-rating
 
 v 1.0.0
