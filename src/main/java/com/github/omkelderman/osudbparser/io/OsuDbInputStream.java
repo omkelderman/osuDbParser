@@ -55,7 +55,7 @@ public class OsuDbInputStream extends BufferedInputStream {
      * Read unsigned 8 bit integer
      *
      * @return int representing an unsigned 8 bit integer
-     * @throws IOException
+     * @throws IOException on error of when the end of stream has been reached
      */
     public int readUInt8() throws IOException {
         int b = read();
@@ -70,7 +70,7 @@ public class OsuDbInputStream extends BufferedInputStream {
      * Read little endian unsigned 16 bit integer
      *
      * @return int representing an unsigned 16 bit integer
-     * @throws IOException
+     * @throws IOException on error of when the end of stream has been reached
      */
     public int readUInt16() throws IOException {
         readIntoBuffer(2);
@@ -82,7 +82,7 @@ public class OsuDbInputStream extends BufferedInputStream {
      * Read little endian unsigned 32 bit integer
      *
      * @return long representing an unsigned 32 bit integer
-     * @throws IOException
+     * @throws IOException on error of when the end of stream has been reached
      */
     public long readUInt32() throws IOException {
         readIntoBuffer(4);
@@ -101,7 +101,7 @@ public class OsuDbInputStream extends BufferedInputStream {
      *
      * @return long representing an unsigned 64 bit integer
      * (negative values possible if original is above Long.MAX_VALUE)
-     * @throws IOException
+     * @throws IOException on error of when the end of stream has been reached
      */
     public long readUInt64() throws IOException {
         readIntoBuffer(8);

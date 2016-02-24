@@ -194,7 +194,7 @@ public class OsuBeatmapInfo {
 
     /**
      * Grade achieved in osu! standard
-     * <u>
+     * <ul>
      * <li>0: silver SS</li>
      * <li>1: silver S</li>
      * <li>2: SS</li>
@@ -204,13 +204,13 @@ public class OsuBeatmapInfo {
      * <li>6: C</li>
      * <li>7: D</li>
      * <li>9: no grade</li>
-     * </u>
+     * </ul>
      */
     private int standardGrade;
 
     /**
      * Grade achieved in Taiko
-     * <u>
+     * <ul>
      * <li>0: silver SS</li>
      * <li>1: silver S</li>
      * <li>2: SS</li>
@@ -220,13 +220,13 @@ public class OsuBeatmapInfo {
      * <li>6: C</li>
      * <li>7: D</li>
      * <li>9: no grade</li>
-     * </u>
+     * </ul>
      */
     private int taikoGrade;
 
     /**
      * Grade achieved in CTB
-     * <u>
+     * <ul>
      * <li>0: silver SS</li>
      * <li>1: silver S</li>
      * <li>2: SS</li>
@@ -236,13 +236,13 @@ public class OsuBeatmapInfo {
      * <li>6: C</li>
      * <li>7: D</li>
      * <li>9: no grade</li>
-     * </u>
+     * </ul>
      */
     private int ctbGrade;
 
     /**
      * Grade achieved in osu!mania
-     * <u>
+     * <ul>
      * <li>0: silver SS</li>
      * <li>1: silver S</li>
      * <li>2: SS</li>
@@ -252,7 +252,7 @@ public class OsuBeatmapInfo {
      * <li>6: C</li>
      * <li>7: D</li>
      * <li>9: no grade</li>
-     * </u>
+     * </ul>
      */
     private int maniaGrade;
 
