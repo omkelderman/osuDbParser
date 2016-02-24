@@ -51,5 +51,54 @@ public class StarRatingTest {
         assertEquals(118.89, starRating.forModArray(8), 0.1); // HT
     }
 
+    @Test
+    public void testForModsExtraMods() throws Exception {
+        StarRating starRating = StarRating.parse(new OsuDbInputStream(ClassLoader.getSystemResourceAsStream("starRating1.db")));
+
+        assertNotNull(starRating);
+
+        assertEquals(2.86, starRating.forModArray(4, 3), 0.1); // HR + HD
+        assertEquals(2.33, starRating.forModArray(4, 8, 3), 0.1); // HR+HT + HD
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testForModsIllegalModsEZHR() throws Exception {
+        StarRating starRating = StarRating.parse(new OsuDbInputStream(ClassLoader.getSystemResourceAsStream("starRating1.db")));
+
+        assertNotNull(starRating);
+
+        // EZ+HR is illegal
+        starRating.forModArray(1, 4); // EZ + HR
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testForModsIllegalModsEZHRHD() throws Exception {
+        StarRating starRating = StarRating.parse(new OsuDbInputStream(ClassLoader.getSystemResourceAsStream("starRating1.db")));
+
+        assertNotNull(starRating);
+
+        // EZ+HR is illegal
+        starRating.forModArray(1, 4, 3); // EZ + HR + HD
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testForModsIllegalModsHTDT() throws Exception {
+        StarRating starRating = StarRating.parse(new OsuDbInputStream(ClassLoader.getSystemResourceAsStream("starRating1.db")));
+
+        assertNotNull(starRating);
+
+        // HT+DT is illegal
+        starRating.forModArray(8, 6); // HT + DT
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testForModsIllegalModsHTDTHD() throws Exception {
+        StarRating starRating = StarRating.parse(new OsuDbInputStream(ClassLoader.getSystemResourceAsStream("starRating1.db")));
+
+        assertNotNull(starRating);
+
+        // HT+DT is illegal
+        starRating.forModArray(8, 6, 3); // HT + DT + HD
+    }
 
 }

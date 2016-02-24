@@ -1,4 +1,7 @@
-v 1
+v 1.0.1
+    - StarRating.forMods(long) now filters out mods that not affect star-rating
+
+v 1.0.0
     - added Star Rating
 
 v 0.0.2
