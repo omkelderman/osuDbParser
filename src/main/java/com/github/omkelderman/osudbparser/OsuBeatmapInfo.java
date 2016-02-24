@@ -167,6 +167,15 @@ public class OsuBeatmapInfo {
     private double bpmMax;
 
     /**
+     * The main / most used bpm. It looks like this is the value in parentheses as shown in-game.
+     * <i>At least I sincerely hope it is...</i>
+     * <p>
+     * <b>NOTE: This is NOT (at least half the time I tested it) the bpm value provided by the osu!-api or website! I
+     * have no clue where that value is based on...</b>
+     */
+    private double bpm;
+
+    /**
      * Beatmap ID
      */
     private long beatmapId;
@@ -398,7 +407,6 @@ public class OsuBeatmapInfo {
         beatmapInfo.totalTime = iStream.readUInt32();
         beatmapInfo.audioPreviewStartTime = iStream.readUInt32();
         beatmapInfo.timingPoints = TimingPoint.parseArray(iStream);
-        beatmapInfo.calcMinMaxBpm();
         beatmapInfo.beatmapId = iStream.readUInt32();
         beatmapInfo.beatmapSetId = iStream.readUInt32();
         beatmapInfo.threadId = iStream.readUInt32();
@@ -425,11 +433,15 @@ public class OsuBeatmapInfo {
         beatmapInfo.visualOverride = iStream.readBoolean();
         beatmapInfo.lastModificationTime2 = iStream.readUInt32();
         beatmapInfo.maniaScrollSpeed = iStream.readUInt8();
+
+        // calculate non-provided fields.
+        beatmapInfo.calcMinMaxBpm();
         return beatmapInfo;
     }
 
     private void calcMinMaxBpm() {
         bpmMin = TimingPoint.calcBpmMin(timingPoints);
         bpmMax = TimingPoint.calcBpmMax(timingPoints);
+        bpm = TimingPoint.calcMainBpm(timingPoints, totalTime);
     }
 }
