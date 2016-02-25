@@ -47,9 +47,12 @@ public class TimingPoint {
     public static TimingPoint parse(OsuDbInputStream iStream) throws IOException {
         TimingPoint timingPoint = new TimingPoint();
         timingPoint.msPerBeat = iStream.readDouble();
-        timingPoint.bpm = 60000 / timingPoint.msPerBeat;
         timingPoint.offset = iStream.readDouble();
+        // i think it's a bit silly to store a "is not" value
         timingPoint.inherited = !iStream.readBoolean();
+
+        // calculate non-provided fields.
+        timingPoint.bpm = 60000 / timingPoint.msPerBeat;
         return timingPoint;
     }
 
@@ -74,7 +77,7 @@ public class TimingPoint {
     public static double calcMainBpm(TimingPoint[] timingPoints, long beatmapTotalTime) {
         TimingPoint[] notInheritedTimingPoints = getNotInheritedTimingPoints(timingPoints).toArray(TimingPoint[]::new);
         if (notInheritedTimingPoints.length == 0) {
-            return 0;
+            return 0D;
         } else if (notInheritedTimingPoints.length == 1) {
             return notInheritedTimingPoints[0].bpm;
         }
@@ -113,11 +116,7 @@ public class TimingPoint {
     }
 
     private static Stream<TimingPoint> getNotInheritedTimingPoints(TimingPoint[] timingPoints) {
-        return Arrays.stream(timingPoints).filter(TimingPoint::isNotInherited);
-    }
-
-    private boolean isNotInherited() {
-        return !inherited;
+        return Arrays.stream(timingPoints).filter(timingPoint -> !timingPoint.inherited);
     }
 
     private static int compareByBpm(TimingPoint a, TimingPoint b) {
