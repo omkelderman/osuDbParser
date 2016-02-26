@@ -176,6 +176,12 @@ public class OsuBeatmapInfo {
     private double bpm;
 
     /**
+     * Is the bpm variable? If yes, <code>bpmMin</code> and <code>bpmMax</code> are different and
+     * <code>bpm</code> contains the "main" bpm. If not, they are all the same.
+     */
+    private boolean variableBpm;
+
+    /**
      * Beatmap ID
      */
     private long beatmapId;
@@ -442,6 +448,16 @@ public class OsuBeatmapInfo {
     private void calcMinMaxBpm() {
         bpmMin = TimingPoint.calcBpmMin(timingPoints);
         bpmMax = TimingPoint.calcBpmMax(timingPoints);
-        bpm = TimingPoint.calcMainBpm(timingPoints, totalTime);
+
+        // if bpmMin and bpmMax are different, there is a variable bpm
+        variableBpm = !(bpmMax - bpmMin < 0.001);
+
+        if (variableBpm) {
+            // in that case, we also need to calculate the "main" bpm
+            bpm = TimingPoint.calcMainBpm(timingPoints, totalTime);
+        } else {
+            // otherwise it's just the same
+            bpm = bpmMax;
+        }
     }
 }
