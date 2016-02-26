@@ -47,6 +47,12 @@ public class OsuDbInputStream extends BufferedInputStream {
         }
     }
 
+    /**
+     * Reads a unsigned 8 bit integer and checks if it matches <code>expected</code>
+     *
+     * @param expected The expected unsigned 8 bit integer
+     * @throws IOException If the number read does not matches <code>expected</code>
+     */
     public void readExpectedUInt8(int expected) throws IOException {
         int b = readUInt8();
         if (b != expected) {

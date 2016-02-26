@@ -14,7 +14,7 @@ import static org.junit.Assert.assertEquals;
 public class OsuDbInputStreamTest {
 
     @Test(expected = EOFException.class)
-    public void testReadFullyToShort() throws IOException {
+    public void testReadFullyToShort() throws Exception {
         byte[] bytes = new byte[]{0, 1}; // only two bytes
         ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
 
@@ -34,7 +34,7 @@ public class OsuDbInputStreamTest {
     }
 
     @Test
-    public void testReadFully() throws IOException {
+    public void testReadFully() throws Exception {
         byte[] bytes = new byte[]{0, 1, 2, 3};
         ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
 
@@ -43,6 +43,16 @@ public class OsuDbInputStreamTest {
         osuDbInputStream.readFully(bytesToRead);
 
         assertArrayEquals(bytes, bytesToRead);
+    }
+
+    @Test
+    public void testSkipFully() throws Exception {
+        ByteArrayInputStream bais = buildInputStream(1, 2, 3, 4, 5, 6);
+        OsuDbInputStream osuDbInputStream = new OsuDbInputStream(bais);
+
+        osuDbInputStream.skipFully(3);
+
+        assertEquals("should be 3 left, since we skipped 3", 3, bais.available());
     }
 
     @Test
