@@ -50,15 +50,9 @@ public class StarRating {
 
         StarRating starRating = new StarRating();
         for (long i = 0; i < amount; ++i) {
-            int leByte = iStream.readUInt8();
-            if (leByte != 0x08) {
-                throw new IOException("expected byte 0x08");
-            }
+            iStream.readExpectedUInt8(0x08);
             long modCombo = iStream.readUInt32();
-            leByte = iStream.readUInt8();
-            if (leByte != 0x0D) {
-                throw new IOException("expected byte 0x0D");
-            }
+            iStream.readExpectedUInt8(0x0D);
             double rating = iStream.readDouble();
             starRating.ratings.put(modCombo, rating);
         }

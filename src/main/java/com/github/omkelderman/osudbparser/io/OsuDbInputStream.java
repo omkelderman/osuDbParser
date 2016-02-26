@@ -47,6 +47,13 @@ public class OsuDbInputStream extends BufferedInputStream {
         }
     }
 
+    public void readExpectedUInt8(int expected) throws IOException {
+        int b = readUInt8();
+        if (b != expected) {
+            throw new IOException(String.format("Expected 0x%02X, but got 0x%02X", expected, b));
+        }
+    }
+
     public boolean readBoolean() throws IOException {
         return (readUInt8() != 0);
     }

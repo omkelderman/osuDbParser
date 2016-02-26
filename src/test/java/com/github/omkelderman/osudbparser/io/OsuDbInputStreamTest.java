@@ -46,6 +46,24 @@ public class OsuDbInputStreamTest {
     }
 
     @Test
+    public void testReadExpectedUInt8() throws Exception {
+        ByteArrayInputStream bais = buildInputStream(0x42);
+        OsuDbInputStream osuDbInputStream = new OsuDbInputStream(bais);
+
+        osuDbInputStream.readExpectedUInt8(0x42);
+
+        assertEquals("inputStream should be empty", 0, bais.available());
+    }
+
+    @Test(expected = IOException.class)
+    public void testReadExpectedUInt8Fail() throws Exception {
+        OsuDbInputStream osuDbInputStream = new OsuDbInputStream(buildInputStream(0x42));
+
+        // this should fail
+        osuDbInputStream.readExpectedUInt8(0x69);
+    }
+
+    @Test
     public void testReadBooleanFalse() throws Exception {
         OsuDbInputStream osuDbInputStream = new OsuDbInputStream(buildInputStream(0));
 
