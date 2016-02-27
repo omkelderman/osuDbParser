@@ -1,3 +1,6 @@
+v 1.0.2
+    - changed 'gameMode' and 'grade' in OsuBeatmapInfo to use a enum instead of int
+
 v 1.0.1
     - Added main / most used bpm
     - StarRating.forMods(long) now filters out mods that not affect star-rating

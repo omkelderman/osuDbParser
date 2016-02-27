@@ -4,6 +4,8 @@ import com.github.omkelderman.osudbparser.io.OsuDbInputStream;
 import lombok.Getter;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @Getter
 public class OsuBeatmapInfo {
@@ -200,67 +202,23 @@ public class OsuBeatmapInfo {
 
     /**
      * Grade achieved in osu! standard
-     * <ul>
-     * <li>0: silver SS</li>
-     * <li>1: silver S</li>
-     * <li>2: SS</li>
-     * <li>3: S</li>
-     * <li>4: A</li>
-     * <li>5: B</li>
-     * <li>6: C</li>
-     * <li>7: D</li>
-     * <li>9: no grade</li>
-     * </ul>
      */
-    private int standardGrade;
+    private Grade standardGrade;
 
     /**
      * Grade achieved in Taiko
-     * <ul>
-     * <li>0: silver SS</li>
-     * <li>1: silver S</li>
-     * <li>2: SS</li>
-     * <li>3: S</li>
-     * <li>4: A</li>
-     * <li>5: B</li>
-     * <li>6: C</li>
-     * <li>7: D</li>
-     * <li>9: no grade</li>
-     * </ul>
      */
-    private int taikoGrade;
+    private Grade taikoGrade;
 
     /**
      * Grade achieved in CTB
-     * <ul>
-     * <li>0: silver SS</li>
-     * <li>1: silver S</li>
-     * <li>2: SS</li>
-     * <li>3: S</li>
-     * <li>4: A</li>
-     * <li>5: B</li>
-     * <li>6: C</li>
-     * <li>7: D</li>
-     * <li>9: no grade</li>
-     * </ul>
      */
-    private int ctbGrade;
+    private Grade ctbGrade;
 
     /**
      * Grade achieved in osu!mania
-     * <ul>
-     * <li>0: silver SS</li>
-     * <li>1: silver S</li>
-     * <li>2: SS</li>
-     * <li>3: S</li>
-     * <li>4: A</li>
-     * <li>5: B</li>
-     * <li>6: C</li>
-     * <li>7: D</li>
-     * <li>9: no grade</li>
-     * </ul>
      */
-    private int maniaGrade;
+    private Grade maniaGrade;
 
     /**
      * Local beatmap offset
@@ -275,7 +233,7 @@ public class OsuBeatmapInfo {
     /**
      * Osu gameplay mode. 0x00 = osu!Standard, 0x01 = Taiko, 0x02 = CTB, 0x03 = Mania
      */
-    private int gameMode;
+    private GameMode gameMode;
 
     /**
      * Song source
@@ -416,13 +374,13 @@ public class OsuBeatmapInfo {
         beatmapInfo.beatmapId = iStream.readUInt32();
         beatmapInfo.beatmapSetId = iStream.readUInt32();
         beatmapInfo.threadId = iStream.readUInt32();
-        beatmapInfo.standardGrade = iStream.readUInt8();
-        beatmapInfo.taikoGrade = iStream.readUInt8();
-        beatmapInfo.ctbGrade = iStream.readUInt8();
-        beatmapInfo.maniaGrade = iStream.readUInt8();
+        beatmapInfo.standardGrade = Grade.valueOf(iStream.readUInt8());
+        beatmapInfo.taikoGrade = Grade.valueOf(iStream.readUInt8());
+        beatmapInfo.ctbGrade = Grade.valueOf(iStream.readUInt8());
+        beatmapInfo.maniaGrade = Grade.valueOf(iStream.readUInt8());
         beatmapInfo.localOffset = iStream.readUInt16();
         beatmapInfo.stackLeniency = iStream.readFloat();
-        beatmapInfo.gameMode = iStream.readUInt8();
+        beatmapInfo.gameMode = GameMode.valueOf(iStream.readUInt8());
         beatmapInfo.source = iStream.readString();
         beatmapInfo.tags = iStream.readString();
         beatmapInfo.onlineOffset = iStream.readUInt16();
@@ -458,6 +416,61 @@ public class OsuBeatmapInfo {
         } else {
             // otherwise it's just the same
             bpm = bpmMax;
+        }
+    }
+
+    public enum GameMode {
+        //0x00 = osu!Standard, 0x01 = Taiko, 0x02 = CTB, 0x03 = Mania
+        OSU(0), TAIKO(1), CTB(2), MANIA(3);
+
+        private final int value;
+
+        GameMode(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+        private static final Map<Integer, GameMode> MAP;
+
+        static {
+            MAP = new HashMap<>();
+            for (GameMode mode : values()) {
+                MAP.put(mode.value, mode);
+            }
+        }
+
+        public static GameMode valueOf(int i) {
+            return MAP.get(i);
+        }
+    }
+
+    public enum Grade {
+        SSH(0), SS(1), SH(2), S(3), A(4), B(5), C(6), D(7), NONE(9);
+
+        private final int value;
+
+        Grade(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+        private static final Map<Integer, Grade> MAP;
+
+        static {
+            MAP = new HashMap<>();
+            for (Grade grade : values()) {
+                MAP.put(grade.value, grade);
+            }
+        }
+
+        public static Grade valueOf(int value) {
+            return MAP.get(value);
         }
     }
 }

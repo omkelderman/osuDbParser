@@ -41,13 +41,13 @@ public class OsuBeatmapInfoTest {
         assertEquals(374113L, beatmapInfo.getBeatmapId());
         assertEquals(151878L, beatmapInfo.getBeatmapSetId());
         assertEquals(187996L, beatmapInfo.getThreadId());
-        assertEquals(9, beatmapInfo.getStandardGrade());
-        assertEquals(9, beatmapInfo.getTaikoGrade());
-        assertEquals(9, beatmapInfo.getCtbGrade());
-        assertEquals(9, beatmapInfo.getManiaGrade());
+        assertEquals(OsuBeatmapInfo.Grade.NONE, beatmapInfo.getStandardGrade());
+        assertEquals(OsuBeatmapInfo.Grade.NONE, beatmapInfo.getTaikoGrade());
+        assertEquals(OsuBeatmapInfo.Grade.NONE, beatmapInfo.getCtbGrade());
+        assertEquals(OsuBeatmapInfo.Grade.NONE, beatmapInfo.getManiaGrade());
         assertEquals(0, beatmapInfo.getLocalOffset());
         assertEquals(0.7F, beatmapInfo.getStackLeniency(), 0.0001F);
-        assertEquals(0, beatmapInfo.getGameMode());
+        assertEquals(OsuBeatmapInfo.GameMode.OSU, beatmapInfo.getGameMode());
         assertEquals("", beatmapInfo.getSource());
         assertEquals("hardcore", beatmapInfo.getTags());
         assertEquals(0, beatmapInfo.getOnlineOffset());
