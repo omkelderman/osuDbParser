@@ -15,11 +15,6 @@ public class TimingPoint {
     private double msPerBeat;
 
     /**
-     * Beats per minute
-     */
-    private double bpm;
-
-    /**
      * Offset in milliseconds
      */
     private double offset;
@@ -28,6 +23,13 @@ public class TimingPoint {
      * is it an inherited Timing Point?
      */
     private boolean inherited;
+
+    // calculated non-provided fields:
+
+    /**
+     * Beats per minute
+     */
+    private double bpm;
 
     private TimingPoint() {
     }

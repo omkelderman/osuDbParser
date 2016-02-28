@@ -55,11 +55,17 @@ public class OsuBeatmapInfo {
     private String osuFileName;
 
     /**
-     * Ranked status (4 = ranked, 5 = approved, 2 = pending/graveyard)
+     * Raw ranked status value.
+     * Use {@link #getRankedStatus()} instead if possible!
      * <p>
-     * <i>Someone verify this, I don't trust the wiki page I copied this info from....</i>
+     * According to wiki: 4 = ranked, 5 = approved, 2 = pending/graveyard
+     * <br>
+     * <i><strike>Someone verify this, I don't trust the wiki page I copied this info from....</strike></i>
+     * <p>
+     * From my own observations: 0 = unkown, 1 = not submitted, 6 = qualified, and the values from the wiki seems to be
+     * correct
      */
-    private int ranked;
+    private int rankedStatusRaw;
 
     /**
      * Number of hitcircles
@@ -157,31 +163,6 @@ public class OsuBeatmapInfo {
      * Array of timing points
      */
     private TimingPoint[] timingPoints;
-
-    /**
-     * The highest bpm found in this map
-     */
-    private double bpmMin;
-
-    /**
-     * The lowest bpm found in this map
-     */
-    private double bpmMax;
-
-    /**
-     * The main / most used bpm. It looks like this is the value in parentheses as shown in-game.
-     * <i>At least I sincerely hope it is...</i>
-     * <p>
-     * <b>NOTE: This is NOT (at least half the time I tested it) the bpm value provided by the osu!-api or website! I
-     * have no clue where that value is based on...</b>
-     */
-    private double bpm;
-
-    /**
-     * Is the bpm variable? If yes, <code>bpmMin</code> and <code>bpmMax</code> are different and
-     * <code>bpm</code> contains the "main" bpm. If not, they are all the same.
-     */
-    private boolean variableBpm;
 
     /**
      * Beatmap ID
@@ -327,6 +308,48 @@ public class OsuBeatmapInfo {
      */
     private int maniaScrollSpeed;
 
+    // calculated non-provided fields:
+
+    /**
+     * The highest bpm found in this map
+     */
+    private double bpmMin;
+
+    /**
+     * The lowest bpm found in this map
+     */
+    private double bpmMax;
+
+    /**
+     * The main / most used bpm. It looks like this is the value in parentheses as shown in-game.
+     * <i>At least I sincerely hope it is...</i>
+     * <p>
+     * <b>NOTE: This is NOT (at least half the time I tested it) the bpm value provided by the osu!-api or website! I
+     * have no clue where that value is based on...</b>
+     */
+    private double bpm;
+
+    /**
+     * Is the bpm variable? If yes, <code>bpmMin</code> and <code>bpmMax</code> are different and
+     * <code>bpm</code> contains the "main" bpm. If not, they are all the same.
+     */
+    private boolean variableBpm;
+
+    /**
+     * The ranked status of this beatmap. <b>Note that this can return <code>null</code> if there is a value in the
+     * file that I don't know about (yet), even though there is {@link RankedStatus#UNKNOWN}.</b>
+     * <p>
+     * So to summarize: there are two types of "unknown":
+     * <ul>
+     * <li>Unkown by me (the dev): <code>null</code></li>
+     * <li>Unkown by osu: <code>{@link RankedStatus#UNKNOWN}</code>. This usually happens when the beatmap has not yet
+     * been selected in the menu.</li>
+     * </ul>
+     * In case of the first one (well, actually always :P) {@link #getRankedStatusRaw()} will have the raw value, of which you
+     * may be able to do something with.
+     */
+    private RankedStatus rankedStatus;
+
     private OsuBeatmapInfo() {
     }
 
@@ -353,7 +376,7 @@ public class OsuBeatmapInfo {
         beatmapInfo.audioFileName = iStream.readString();
         beatmapInfo.md5BeatmapHash = iStream.readString();
         beatmapInfo.osuFileName = iStream.readString();
-        beatmapInfo.ranked = iStream.readUInt8();
+        beatmapInfo.rankedStatusRaw = iStream.readUInt8();
         beatmapInfo.hitcircleCount = iStream.readUInt16();
         beatmapInfo.sliderCount = iStream.readUInt16();
         beatmapInfo.spinnerCount = iStream.readUInt16();
@@ -400,6 +423,7 @@ public class OsuBeatmapInfo {
 
         // calculate non-provided fields.
         beatmapInfo.calcMinMaxBpm();
+        beatmapInfo.rankedStatus = RankedStatus.valueOf(beatmapInfo.rankedStatusRaw);
         return beatmapInfo;
     }
 
@@ -470,6 +494,33 @@ public class OsuBeatmapInfo {
         }
 
         public static Grade valueOf(int value) {
+            return MAP.get(value);
+        }
+    }
+
+    public enum RankedStatus {
+        UNKNOWN(0), NOT_SUBMITTED(1), GRAVEYARD(2), RANKED(4), APPROVED(5), QUALIFIED(6);
+
+        private final int value;
+
+        RankedStatus(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+        private static final Map<Integer, RankedStatus> MAP;
+
+        static {
+            MAP = new HashMap<>();
+            for (RankedStatus grade : values()) {
+                MAP.put(grade.value, grade);
+            }
+        }
+
+        public static RankedStatus valueOf(int value) {
             return MAP.get(value);
         }
     }

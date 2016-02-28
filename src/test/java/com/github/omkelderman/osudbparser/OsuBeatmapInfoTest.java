@@ -20,7 +20,7 @@ public class OsuBeatmapInfoTest {
         assertEquals("Chasers - Lost.mp3", beatmapInfo.getAudioFileName());
         assertEquals("1e1cbbf6c326e8e908e5be71d9d9602e", beatmapInfo.getMd5BeatmapHash());
         assertEquals("Chasers - Lost (ktgster) [Hard].osu", beatmapInfo.getOsuFileName());
-        assertEquals(4, beatmapInfo.getRanked());
+        assertEquals(4, beatmapInfo.getRankedStatusRaw());
         assertEquals(289, beatmapInfo.getHitcircleCount());
         assertEquals(219, beatmapInfo.getSliderCount());
         assertEquals(3, beatmapInfo.getSpinnerCount());
@@ -66,6 +66,7 @@ public class OsuBeatmapInfoTest {
         assertEquals(0, beatmapInfo.getManiaScrollSpeed());
 
         // calculated data
+        assertEquals(OsuBeatmapInfo.RankedStatus.RANKED, beatmapInfo.getRankedStatus());
         assertEquals(170D, beatmapInfo.getBpmMin(), 0.0001D);
         assertEquals(170D, beatmapInfo.getBpmMax(), 0.0001D);
         assertEquals(170D, beatmapInfo.getBpm(), 0.0001D);
