@@ -1,3 +1,6 @@
+v 1.2.0
+    - added support for newer osu!.db format
+
 v 1.1.0
     - added RankedStatus enum
         * which could be null, in that case rankedStatusRaw can be used.
