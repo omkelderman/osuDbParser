@@ -3,6 +3,7 @@ package com.github.omkelderman.osudbparser;
 import com.github.omkelderman.osudbparser.io.OsuDbInputStream;
 import lombok.Getter;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -353,78 +354,97 @@ public class OsuBeatmapInfo {
     private OsuBeatmapInfo() {
     }
 
-    public static OsuBeatmapInfo[] parseArray(OsuDbInputStream iStream) throws IOException {
+    public static OsuBeatmapInfo[] parseArray(OsuDbInputStream iStream, long osuVersion) throws IOException {
         long beatmapCount = iStream.readUInt32();
         if (beatmapCount > Integer.MAX_VALUE) {
             throw new IOException("beatmapCount to much to store the data...");
         }
         OsuBeatmapInfo[] beatmaps = new OsuBeatmapInfo[(int) beatmapCount];
         for (int i = 0; i < beatmaps.length; ++i) {
-            beatmaps[i] = parse(iStream);
+            beatmaps[i] = parse(iStream, osuVersion);
         }
         return beatmaps;
     }
 
-    public static OsuBeatmapInfo parse(OsuDbInputStream iStream) throws IOException {
+    public static OsuBeatmapInfo parse(OsuDbInputStream iStream, long osuVersion) throws IOException {
         OsuBeatmapInfo beatmapInfo = new OsuBeatmapInfo();
-        beatmapInfo.artistName = iStream.readString();
-        beatmapInfo.artistNameUnicode = iStream.readString();
-        beatmapInfo.songTitle = iStream.readString();
-        beatmapInfo.songTitleUnicode = iStream.readString();
-        beatmapInfo.creatorName = iStream.readString();
-        beatmapInfo.difficulty = iStream.readString();
-        beatmapInfo.audioFileName = iStream.readString();
-        beatmapInfo.md5BeatmapHash = iStream.readString();
-        beatmapInfo.osuFileName = iStream.readString();
-        beatmapInfo.rankedStatusRaw = iStream.readUInt8();
-        beatmapInfo.hitcircleCount = iStream.readUInt16();
-        beatmapInfo.sliderCount = iStream.readUInt16();
-        beatmapInfo.spinnerCount = iStream.readUInt16();
-        beatmapInfo.lastModificationTime = iStream.readUInt64();
-        beatmapInfo.approachRate = iStream.readFloat();
-        beatmapInfo.circleSize = iStream.readFloat();
-        beatmapInfo.hpDrain = iStream.readFloat();
-        beatmapInfo.overallDifficulty = iStream.readFloat();
-        beatmapInfo.sliderVelocity = iStream.readDouble();
-        beatmapInfo.standardStarRating = StarRating.parse(iStream);
-        beatmapInfo.taikoStarRating = StarRating.parse(iStream);
-        beatmapInfo.ctbStarRating = StarRating.parse(iStream);
-        beatmapInfo.maniaStarRating = StarRating.parse(iStream);
-        beatmapInfo.drainTime = iStream.readUInt32();
-        beatmapInfo.totalTime = iStream.readUInt32();
-        beatmapInfo.audioPreviewStartTime = iStream.readUInt32();
-        beatmapInfo.timingPoints = TimingPoint.parseArray(iStream);
-        beatmapInfo.beatmapId = iStream.readUInt32();
-        beatmapInfo.beatmapSetId = iStream.readUInt32();
-        beatmapInfo.threadId = iStream.readUInt32();
-        beatmapInfo.standardGrade = Grade.valueOf(iStream.readUInt8());
-        beatmapInfo.taikoGrade = Grade.valueOf(iStream.readUInt8());
-        beatmapInfo.ctbGrade = Grade.valueOf(iStream.readUInt8());
-        beatmapInfo.maniaGrade = Grade.valueOf(iStream.readUInt8());
-        beatmapInfo.localOffset = iStream.readUInt16();
-        beatmapInfo.stackLeniency = iStream.readFloat();
-        beatmapInfo.gameMode = GameMode.valueOf(iStream.readUInt8());
-        beatmapInfo.source = iStream.readString();
-        beatmapInfo.tags = iStream.readString();
-        beatmapInfo.onlineOffset = iStream.readUInt16();
-        beatmapInfo.font = iStream.readString();
-        beatmapInfo.unplayed = iStream.readBoolean();
-        beatmapInfo.lastTimePlayed = iStream.readUInt64();
-        beatmapInfo.osz2 = iStream.readBoolean();
-        beatmapInfo.folderName = iStream.readString();
-        beatmapInfo.lastCheckedTime = iStream.readUInt64();
-        beatmapInfo.ignoreBeatmapSounds = iStream.readBoolean();
-        beatmapInfo.ignoreBeatmapSkin = iStream.readBoolean();
-        beatmapInfo.disableStoryboard = iStream.readBoolean();
-        beatmapInfo.disableVideo = iStream.readBoolean();
-        beatmapInfo.visualOverride = iStream.readBoolean();
-        beatmapInfo.lastModificationTime2 = iStream.readUInt32();
-        beatmapInfo.maniaScrollSpeed = iStream.readUInt8();
+        if(osuVersion < 20160411) {
+            // this might fail, cause between version 20160403 and 20160411 im not sure
+            // i don't even know if there is a version nr between those two hahaha
+            // oh ppy, if only you used a incremental version-id or something....
+            beatmapInfo.parseData(iStream);
+        } else {
+            long beatmapBytesLength = iStream.readUInt32();
+            if (beatmapBytesLength > Integer.MAX_VALUE) {
+                throw new IOException("beatmapBytesLength to much to store the data...");
+            }
+            byte[] beatmapBytes = new byte[(int) beatmapBytesLength];
+            iStream.readFully(beatmapBytes);
+
+            OsuDbInputStream iStream2 = new OsuDbInputStream(new ByteArrayInputStream(beatmapBytes));
+            beatmapInfo.parseData(iStream2);
+        }
+        return beatmapInfo;
+    }
+
+    private void parseData(OsuDbInputStream iStream) throws IOException {
+        artistName = iStream.readString();
+        artistNameUnicode = iStream.readString();
+        songTitle = iStream.readString();
+        songTitleUnicode = iStream.readString();
+        creatorName = iStream.readString();
+        difficulty = iStream.readString();
+        audioFileName = iStream.readString();
+        md5BeatmapHash = iStream.readString();
+        osuFileName = iStream.readString();
+        rankedStatusRaw = iStream.readUInt8();
+        hitcircleCount = iStream.readUInt16();
+        sliderCount = iStream.readUInt16();
+        spinnerCount = iStream.readUInt16();
+        lastModificationTime = iStream.readUInt64();
+        approachRate = iStream.readFloat();
+        circleSize = iStream.readFloat();
+        hpDrain = iStream.readFloat();
+        overallDifficulty = iStream.readFloat();
+        sliderVelocity = iStream.readDouble();
+        standardStarRating = StarRating.parse(iStream);
+        taikoStarRating = StarRating.parse(iStream);
+        ctbStarRating = StarRating.parse(iStream);
+        maniaStarRating = StarRating.parse(iStream);
+        drainTime = iStream.readUInt32();
+        totalTime = iStream.readUInt32();
+        audioPreviewStartTime = iStream.readUInt32();
+        timingPoints = TimingPoint.parseArray(iStream);
+        beatmapId = iStream.readUInt32();
+        beatmapSetId = iStream.readUInt32();
+        threadId = iStream.readUInt32();
+        standardGrade = Grade.valueOf(iStream.readUInt8());
+        taikoGrade = Grade.valueOf(iStream.readUInt8());
+        ctbGrade = Grade.valueOf(iStream.readUInt8());
+        maniaGrade = Grade.valueOf(iStream.readUInt8());
+        localOffset = iStream.readUInt16();
+        stackLeniency = iStream.readFloat();
+        gameMode = GameMode.valueOf(iStream.readUInt8());
+        source = iStream.readString();
+        tags = iStream.readString();
+        onlineOffset = iStream.readUInt16();
+        font = iStream.readString();
+        unplayed = iStream.readBoolean();
+        lastTimePlayed = iStream.readUInt64();
+        osz2 = iStream.readBoolean();
+        folderName = iStream.readString();
+        lastCheckedTime = iStream.readUInt64();
+        ignoreBeatmapSounds = iStream.readBoolean();
+        ignoreBeatmapSkin = iStream.readBoolean();
+        disableStoryboard = iStream.readBoolean();
+        disableVideo = iStream.readBoolean();
+        visualOverride = iStream.readBoolean();
+        lastModificationTime2 = iStream.readUInt32();
+        maniaScrollSpeed = iStream.readUInt8();
 
         // calculate non-provided fields.
-        beatmapInfo.calcMinMaxBpm();
-        beatmapInfo.rankedStatus = RankedStatus.valueOf(beatmapInfo.rankedStatusRaw);
-        return beatmapInfo;
+        calcMinMaxBpm();
+        rankedStatus = RankedStatus.valueOf(rankedStatusRaw);
     }
 
     private void calcMinMaxBpm() {

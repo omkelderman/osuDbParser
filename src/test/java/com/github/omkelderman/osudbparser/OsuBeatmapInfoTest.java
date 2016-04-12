@@ -9,7 +9,7 @@ public class OsuBeatmapInfoTest {
 
     @Test
     public void testParse() throws Exception {
-        OsuBeatmapInfo beatmapInfo = OsuBeatmapInfo.parse(new OsuDbInputStream(ClassLoader.getSystemResourceAsStream("osuBeatmap-single.db")));
+        OsuBeatmapInfo beatmapInfo = OsuBeatmapInfo.parse(new OsuDbInputStream(ClassLoader.getSystemResourceAsStream("osuBeatmap-single.db")), 20140609);
 
         assertEquals("Chasers", beatmapInfo.getArtistName());
         assertEquals("Chasers", beatmapInfo.getArtistNameUnicode());
@@ -75,7 +75,7 @@ public class OsuBeatmapInfoTest {
 
     @Test
     public void testParseArray() throws Exception {
-        OsuBeatmapInfo[] beatmapInfos = OsuBeatmapInfo.parseArray(new OsuDbInputStream(ClassLoader.getSystemResourceAsStream("osuBeatmap-array.db")));
+        OsuBeatmapInfo[] beatmapInfos = OsuBeatmapInfo.parseArray(new OsuDbInputStream(ClassLoader.getSystemResourceAsStream("osuBeatmap-array.db")), 20140609);
         assertEquals(33, beatmapInfos.length);
 
         // beatmap-specific options are tested in the other test

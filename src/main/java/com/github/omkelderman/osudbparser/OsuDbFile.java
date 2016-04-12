@@ -75,7 +75,7 @@ public class OsuDbFile {
         file.accountUnlocked = iStream.readBoolean();
         iStream.readFully(file.unknownDateTimeBytes);
         file.playerName = iStream.readString();
-        file.beatmaps = OsuBeatmapInfo.parseArray(iStream);
+        file.beatmaps = OsuBeatmapInfo.parseArray(iStream, version);
         iStream.readFully(file.unknownIntBytes);
         return file;
     }
