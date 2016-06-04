@@ -1,9 +1,9 @@
 package com.github.omkelderman.osudbparser;
 
 import com.github.omkelderman.osudbparser.io.OsuDbInputStream;
+import com.github.omkelderman.osudbparser.io.SubInputStream;
 import lombok.Getter;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -368,7 +368,7 @@ public class OsuBeatmapInfo {
 
     public static OsuBeatmapInfo parse(OsuDbInputStream iStream, long osuVersion) throws IOException {
         OsuBeatmapInfo beatmapInfo = new OsuBeatmapInfo();
-        if(osuVersion < 20160411) {
+        if (osuVersion < 20160411) {
             // this might fail, cause between version 20160403 and 20160411 im not sure
             // i don't even know if there is a version nr between those two hahaha
             // oh ppy, if only you used a incremental version-id or something....
@@ -378,11 +378,14 @@ public class OsuBeatmapInfo {
             if (beatmapBytesLength > Integer.MAX_VALUE) {
                 throw new IOException("beatmapBytesLength to much to store the data...");
             }
-            byte[] beatmapBytes = new byte[(int) beatmapBytesLength];
-            iStream.readFully(beatmapBytes);
-
-            OsuDbInputStream iStream2 = new OsuDbInputStream(new ByteArrayInputStream(beatmapBytes));
-            beatmapInfo.parseData(iStream2);
+//            byte[] beatmapBytes = new byte[(int) beatmapBytesLength];
+//            iStream.readFully(beatmapBytes);
+//
+//            OsuDbInputStream iStream2 = new OsuDbInputStream(new ByteArrayInputStream(beatmapBytes));
+//            beatmapInfo.parseData(iStream2);
+            try (SubInputStream subStream = new SubInputStream(iStream, (int) beatmapBytesLength)) {
+                beatmapInfo.parseData(new OsuDbInputStream(subStream));
+            }
         }
         return beatmapInfo;
     }
