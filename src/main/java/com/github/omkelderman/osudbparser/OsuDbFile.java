@@ -66,7 +66,7 @@ public class OsuDbFile {
     public static OsuDbFile parse(OsuDbInputStream iStream) throws IOException {
         long version = iStream.readUInt32();
         if (version < 20140609) {
-            throw new IOException("osu version to old");
+            throw new IOException("osu version too old");
         }
 
         OsuDbFile file = new OsuDbFile();
